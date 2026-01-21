@@ -737,67 +737,85 @@
         document.getElementById('ui-quality-verdict').style.color = color;
 
         // Details List
-        // Details List (Batafsil tahlil ro'yxati)
-        const detailsContainer = document.getElementById('details-list');
-        detailsContainer.innerHTML = '';
-        
-        if (data.details && data.details.length > 0) {
-            data.details.forEach(item => {
-                const icon = item.is_good ? 'fa-check-circle' : (item.is_warning ? 'fa-exclamation-triangle' : 'fa-times-circle');
-                const color = item.is_good ? 'var(--success)' : (item.is_warning ? 'var(--warning)' : 'var(--danger)');
-                
-                const html = `
-                <div class="detail-item">
-                    <i class="fas ${icon}" style="color: ${color};"></i>
-                    <div>${item.text}</div>
-                </div>`;
-                detailsContainer.insertAdjacentHTML('beforeend', html);
-            });
-        } else {
-            detailsContainer.innerHTML = '<div style="text-align:center; color:var(--text-gray); font-size:12px;">Qo\'shimcha ma\'lumot yo\'q</div>';
-        }
+        const detailsList = document.getElementById('details-list');
+        detailsList.innerHTML = quality.details.map(detail => {
+            let icon = '✓';
+            let iconColor = 'var(--success)';
+            if(detail.includes('⚠')) { icon = '⚠'; iconColor = 'var(--warning)'; }
+            if(detail.includes('✗')) { icon = '✗'; iconColor = 'var(--danger)'; }
+            if(detail.includes('○')) { icon = '○'; iconColor = 'var(--text-gray)'; }
+            
+            const text = detail.replace(/[✓⚠✗○]\s*/, '');
+            return `<div class="detail-item"><i style="color: ${iconColor}">${icon}</i><span>${text}</span></div>`;
+        }).join('');
 
-        // Chart (Grafik)
+        // Chart
         const ctx = document.getElementById('trendChart').getContext('2d');
         if(chartInstance) chartInstance.destroy();
         
-        // Grafik rangi (Sifatiga qarab)
-        let chartColor = quality.score >= 70 ? '#10B981' : (quality.score >= 50 ? '#F59E0B' : '#EF4444');
-
+        const chartData = data.chart_data;
         chartInstance = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], // Oxirgi 10 ta post
-                datasets: [{
-                    label: 'Likes Trend',
-                    data: data.history || [0,0,0,0,0,0,0,0,0,0], // Agar tarix bo'lmasa 0
-                    borderColor: chartColor,
-                    backgroundColor: (context) => {
-                        const ctx = context.chart.ctx;
-                        const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-                        gradient.addColorStop(0, chartColor + '40'); // 40 = shaffoflik
-                        gradient.addColorStop(1, chartColor + '00');
-                        return gradient;
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: 'Likes',
+                        data: chartData.likes,
+                        borderColor: '#A855F7',
+                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#A855F7',
+                        fill: true
                     },
-                    borderWidth: 3,
-                    tension: 0.4, // Egri chiziq yumshoqligi
-                    fill: true,
-                    pointRadius: 0,
-                    pointHoverRadius: 6
-                }]
+                    {
+                        label: 'Comments',
+                        data: chartData.comments,
+                        borderColor: '#3B82F6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#3B82F6',
+                        fill: true
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    x: { display: false }, 
-                    y: { display: false } 
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            color: '#94A3B8',
+                            font: { size: 11 },
+                            padding: 15
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 31, 58, 0.95)',
+                        titleColor: '#F8FAFC',
+                        bodyColor: '#94A3B8',
+                        borderColor: 'rgba(99, 102, 241, 0.3)',
+                        borderWidth: 1,
+                        padding: 12,
+                        cornerRadius: 8
+                    }
                 },
-                interaction: {
-                    intersect: false,
-                    mode: 'index',
-                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#64748B', font: { size: 10 } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#64748B', font: { size: 10 } }
+                    }
+                }
             }
         });
     }
@@ -806,26 +824,27 @@
         const container = document.getElementById('history-list');
         if(container.innerText.includes("Hali hech narsa")) container.innerHTML = "";
         
-        // Hozirgi vaqt
-        const time = new Date().toLocaleTimeString('uz-UZ', {hour: '2-digit', minute:'2-digit'});
-
         const html = `
-            <div class="card" style="padding: 12px; margin-bottom: 10px; display:flex; justify-content:space-between; align-items:center;" onclick="document.getElementById('usernameInput').value='${data.username}'; analyzeUser(); nav('analysis', document.querySelector('.nav-item.active'))">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <img src="${data.avatar_url}" style="width:40px; height:40px; border-radius:50%;">
+            <div class="detail-item" style="justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <img src="${data.avatar_url}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
                     <div>
-                        <div style="font-weight:700; font-size:14px;">@${data.username}</div>
-                        <div style="font-size:11px; color:var(--text-gray);">${time} • ${formatNumber(data.followers)} followers</div>
+                        <div style="font-weight:600">@${data.username}</div>
+                        <div style="font-size:11px; color: var(--text-gray);">Score: ${data.quality.score} (${data.quality.grade})</div>
                     </div>
                 </div>
-                <div style="text-align:right;">
-                    <div style="font-weight:800; color:${data.quality.score >= 70 ? 'var(--success)' : 'var(--warning)'}">${data.quality.score}</div>
-                    <div style="font-size:10px; color:var(--text-gray);">Score</div>
+                <div style="text-align: right; font-size: 11px; color: var(--text-gray);">
+                    ${new Date().toLocaleDateString('uz-UZ')}
                 </div>
             </div>
         `;
         container.insertAdjacentHTML('afterbegin', html);
     }
+
+    // Enter key support
+    document.getElementById('usernameInput').addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') analyzeUser();
+    });
 </script>
 </body>
 </html>
