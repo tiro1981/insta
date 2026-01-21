@@ -7,262 +7,603 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-body: #F5F7FA;
-            --bg-card: #FFFFFF;
-            --primary: #2563EB;
-            --text-dark: #1E293B;
-            --text-gray: #64748B;
-            --border-color: #F1F5F9;
-            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-            --radius: 20px;
+            --bg-body: #0A0E27;
+            --bg-card: #1A1F3A;
+            --bg-card-hover: #232949;
+            --primary: #6366F1;
+            --primary-light: #818CF8;
+            --text-white: #F8FAFC;
+            --text-gray: #94A3B8;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --purple: #A855F7;
+            --shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            --radius: 24px;
         }
 
-        /* Dark Mode Variables */
-        body.dark-mode {
-            --bg-body: #0F172A;
-            --bg-card: #1E293B;
-            --text-dark: #F8FAFC;
-            --text-gray: #94A3B8;
-            --border-color: #334155;
-            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            margin: 0;
-            padding: 0;
-            color: var(--text-dark);
-            padding-bottom: 90px;
+            background: linear-gradient(135deg, #0A0E27 0%, #1A1F3A 100%);
+            color: var(--text-white);
+            padding-bottom: 100px;
+            min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
-            transition: background-color 0.3s, color 0.3s;
         }
 
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 24px;
+        .container { max-width: 480px; margin: 0 auto; padding: 20px; }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .logo-area {
+            font-weight: 800;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #6366F1, #A855F7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo-area i { 
+            background: linear-gradient(135deg, #E1306C, #F77737);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 26px;
+        }
+        .badge-pro {
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
 
-        /* --- Header --- */
-        .app-header { margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
-        .logo-area { font-weight: 700; font-size: 22px; display: flex; align-items: center; gap: 8px; }
-        .logo-area i { color: #E1306C; font-size: 24px; }
-        .badge-free { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-gray); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
-
-        /* --- Search --- */
+        /* Search */
         .search-container {
-            background: var(--bg-card); padding: 8px; border-radius: 18px;
-            box-shadow: var(--shadow); display: flex; gap: 10px; margin-bottom: 24px;
-            border: 1px solid var(--border-color); transition: 0.3s;
+            background: var(--bg-card);
+            padding: 10px;
+            border-radius: 20px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s;
+        }
+        .search-container:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
         }
         .search-input {
-            flex: 1; border: none; outline: none; padding: 12px 16px; font-size: 16px;
-            font-family: 'Inter', sans-serif; color: var(--text-dark); background: transparent;
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 14px 18px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-white);
+            background: transparent;
         }
+        .search-input::placeholder { color: var(--text-gray); }
         .search-btn {
-            background: var(--primary); color: white; border: none; width: 48px; height: 48px;
-            border-radius: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            border: none;
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
         }
         .search-btn:active { transform: scale(0.95); }
 
-        /* --- Cards --- */
+        /* Period Filter */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--bg-card);
+            padding: 6px;
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .filter-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            color: var(--text-gray);
+        }
+        .filter-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Cards */
         .card {
-            background: var(--bg-card); border-radius: var(--radius); padding: 20px;
-            box-shadow: var(--shadow); margin-bottom: 16px; border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
             transition: 0.3s;
         }
-
-        /* Profile Info */
-        .profile-header { display: flex; align-items: center; gap: 16px; }
-        .avatar { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); background: var(--bg-body); }
-        .profile-name h3 { margin: 0; font-size: 18px; }
-        .profile-name p { margin: 4px 0 0; color: var(--text-gray); font-size: 13px; }
-
-        /* AdScore */
-        .score-box { text-align: center; padding: 20px 0; }
-        .score-circle {
-            width: 120px; height: 120px; margin: 0 auto 15px; border-radius: 50%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border: 10px solid var(--bg-body); position: relative; transition: 0.3s;
+        .card:hover { 
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
         }
-        .score-val { font-size: 36px; font-weight: 800; line-height: 1; }
-        .score-label { font-size: 11px; color: var(--text-gray); text-transform: uppercase; margin-top: 4px; }
-        .verdict-badge { display: inline-block; padding: 8px 20px; border-radius: 25px; font-size: 14px; font-weight: 700; }
 
-        /* Grid Stats */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .stat-item { background: var(--bg-body); padding: 16px; border-radius: 16px; text-align: center; transition: 0.3s; }
-        .stat-val { font-size: 18px; font-weight: 700; color: var(--text-dark); }
-        .stat-lbl { font-size: 12px; color: var(--text-gray); margin-top: 4px; }
+        /* Profile */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
+        .profile-info h3 {
+            font-size: 18px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .verified-badge {
+            color: #3B82F6;
+            font-size: 16px;
+        }
+        .profile-stats {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-top: 6px;
+        }
+        .profile-stats span {
+            margin-right: 12px;
+        }
+        .profile-stats strong {
+            color: var(--text-white);
+            font-weight: 600;
+        }
 
-        /* Filters (Vizual ko'rinish, API ishlamaydi) */
-        .filter-tabs { display: flex; background: var(--bg-body); padding: 4px; border-radius: 14px; margin-bottom: 16px; }
-        .filter-tab { flex: 1; text-align: center; padding: 8px; font-size: 13px; color: var(--text-gray); border-radius: 10px; transition: 0.3s; }
-        .filter-tab.active { background: var(--bg-card); color: var(--text-dark); font-weight: 600; box-shadow: var(--shadow); }
-        .api-warning { font-size: 11px; color: var(--warning); text-align: center; margin-top: 8px; }
+        /* Quality Score */
+        .quality-box {
+            text-align: center;
+            padding: 20px;
+        }
+        .quality-circle {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-body), var(--bg-card));
+        }
+        .quality-score {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .quality-grade {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .quality-verdict {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .quality-recommendation {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .stat-card {
+            background: var(--bg-body);
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            text-align: center;
+        }
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-trend {
+            font-size: 11px;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .trend-up { color: var(--success); }
+        .trend-down { color: var(--danger); }
+        .trend-stable { color: var(--warning); }
+
+        /* Reels Section */
+        .reels-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .reels-title {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .reels-title i {
+            background: linear-gradient(135deg, #E1306C, #F77737);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Details List */
+        .details-list {
+            background: var(--bg-body);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .detail-item:last-child { border-bottom: none; }
+        .detail-item i { 
+            margin-top: 2px;
+            font-size: 14px;
+        }
+
+        /* Chart */
+        .chart-container {
+            background: var(--bg-body);
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        .chart-header {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-gray);
+        }
 
         /* Navigation */
         .bottom-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: calc(100% - 48px); max-width: 440px;
-            background: var(--bg-card); box-shadow: var(--shadow);
-            border-radius: 24px; display: flex; justify-content: space-around; padding: 12px 0;
-            z-index: 100; border: 1px solid var(--border-color); transition: 0.3s;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 440px;
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: space-around;
+            padding: 14px 8px;
+            z-index: 100;
+            border: 1px solid rgba(99, 102, 241, 0.2);
         }
-        .nav-item { color: var(--text-gray); font-size: 20px; padding: 10px 20px; border-radius: 16px; transition: 0.3s; }
-        .nav-item.active { color: var(--primary); background: var(--bg-body); }
+        .nav-item {
+            color: var(--text-gray);
+            font-size: 22px;
+            padding: 12px 20px;
+            border-radius: 16px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .nav-item.active {
+            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+        }
 
-        /* Helpers */
-        .hidden { display: none !important; }
-        .loader { text-align: center; padding: 40px; }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--border-color); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
+        /* Loader */
+        .loader {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(99, 102, 241, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* History Item (Clickable) */
-        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; }
-        .history-item:active { background: var(--bg-body); }
-        .history-item:last-child { border-bottom: none; }
-        .empty-state { text-align: center; margin-top: 60px; color: var(--text-gray); }
-        .empty-state i { font-size: 64px; margin-bottom: 16px; display: block; opacity: 0.5; }
+        .loader-text {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-top: 12px;
+        }
 
-        /* Dark Mode Toggle */
-        .theme-switch-wrapper { display: flex; align-items: center; justify-content: space-between; padding: 16px; }
-        .theme-switch { display: inline-block; height: 34px; position: relative; width: 60px; }
-        .theme-switch input { display:none; }
-        .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 34px; }
-        .slider:before { background-color: #fff; bottom: 4px; content: ""; height: 26px; left: 4px; position: absolute; transition: .4s; width: 26px; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(26px); }
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-gray);
+        }
+        .empty-state i {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        .empty-state p {
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="app-header">
-        <div class="logo-area"><i class="fab fa-instagram"></i> InstaAudit</div>
-        <div class="badge-free">Lite v2.0</div>
+        <div class="logo-area">
+            <i class="fab fa-instagram"></i>
+            <span>InstaAudit</span>
+        </div>
+        <div class="badge-pro">PRO v3.0</div>
     </div>
 
     <div id="page-analysis" class="page">
         <div class="search-container">
-            <input type="text" class="search-input" id="usernameInput" placeholder="Instagram username..." autocomplete="off">
-            <button class="search-btn" onclick="startAnalysis()">
-                <i class="fas fa-arrow-right"></i>
+            <input type="text" class="search-input" id="usernameInput" placeholder="@username" autocomplete="off">
+            <button class="search-btn" onclick="analyzeUser()">
+                <i class="fas fa-search"></i>
             </button>
+        </div>
+
+        <div id="filter-section" class="filter-tabs hidden">
+            <div class="filter-tab active" onclick="changePeriod('daily', this)">Kunlik</div>
+            <div class="filter-tab" onclick="changePeriod('weekly', this)">Haftalik</div>
+            <div class="filter-tab" onclick="changePeriod('monthly', this)">Oylik</div>
         </div>
 
         <div id="loader" class="hidden loader">
             <div class="spinner"></div>
-            <p style="font-size: 13px; color: var(--text-gray); margin-top: 10px;">Ma'lumotlar olinmoqda...</p>
+            <p class="loader-text">🤖 Sun'iy intellekt tahlil qilmoqda...</p>
         </div>
 
         <div id="result-area" class="hidden">
+            <!-- Profile Card -->
             <div class="card profile-header">
-                <img src="https://via.placeholder.com/150?text=No+Image" id="ui-avatar" class="avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/847/847969.png'">
-                <div class="profile-name">
-                    <h3 id="ui-username">@username</h3>
-                    <p><span id="ui-followers">0</span> Followers</p>
+                <img src="" id="ui-avatar" class="avatar">
+                <div class="profile-info">
+                    <h3>
+                        <span id="ui-username">@username</span>
+                        <i class="fas fa-check-circle verified-badge hidden" id="verified-icon"></i>
+                    </h3>
+                    <p id="ui-fullname" style="color: var(--text-gray); font-size: 13px;">Full Name</p>
+                    <div class="profile-stats">
+                        <span><strong id="ui-followers">0</strong> Followers</span>
+                        <span><strong id="ui-media">0</strong> Posts</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="card score-box">
-                <div class="score-circle" id="ui-score-circle">
-                    <span class="score-val" id="ui-score">?</span>
-                    <span class="score-label">Ishonch Balli</span>
+            <!-- Quality Score -->
+            <div class="card quality-box">
+                <div class="quality-circle" id="ui-quality-circle">
+                    <span class="quality-score" id="ui-quality-score">0</span>
+                    <span class="quality-grade" id="ui-quality-grade">—</span>
                 </div>
-                <div id="ui-verdict" class="verdict-badge" style="background: var(--bg-body); color: var(--text-gray);">Tahlil qilinmagan</div>
-                <p class="api-warning"><i class="fas fa-info-circle"></i> Haqiqiy postlar statistikasi bepul versiyada mavjud emas. Ballar taxminiy hisoblangan.</p>
+                <div id="ui-quality-verdict" class="quality-verdict">Noma'lum</div>
+                <p class="quality-recommendation" id="ui-quality-rec">—</p>
             </div>
 
-            <div class="filter-tabs">
-                <div class="filter-tab active">Hammasi</div>
-                <div class="filter-tab" style="opacity: 0.5;">Kunlik 🔒</div>
-                <div class="filter-tab" style="opacity: 0.5;">Haftalik 🔒</div>
-            </div>
-
+            <!-- Stats Grid -->
             <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-val" id="ui-er">~</div>
-                    <div class="stat-lbl">Eng. Rate (Taxminiy)</div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" id="ui-er">0%</div>
+                    <div class="stat-label">Engagement Rate</div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-val" id="ui-likes">~</div>
-                    <div class="stat-lbl">O'rt. Like (Taxminiy)</div>
+                <div class="stat-card">
+                    <div class="stat-icon">❤️</div>
+                    <div class="stat-value" id="ui-likes">0</div>
+                    <div class="stat-label">O'rtacha Like</div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-val" id="ui-media">0</div>
-                    <div class="stat-lbl">Jami Postlar</div>
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-value" id="ui-comments">0</div>
+                    <div class="stat-label">O'rtacha Comment</div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-val" id="ui-fake">~</div>
-                    <div class="stat-lbl">Shubhali (Taxminiy)</div>
+                <div class="stat-card">
+                    <div class="stat-icon">👁️</div>
+                    <div class="stat-value" id="ui-views">0</div>
+                    <div class="stat-label">O'rtacha Views</div>
                 </div>
             </div>
 
+            <!-- Reels Analytics -->
             <div class="card">
-                <p style="font-size: 13px; font-weight: 600; margin-bottom: 15px;">Faollik Simulyatsiyasi</p>
-                <canvas id="trendChart" height="120"></canvas>
+                <div class="reels-header">
+                    <div class="reels-title">
+                        <i class="fas fa-film"></i>
+                        <span>Reels Analitikasi</span>
+                    </div>
+                    <div id="reels-trend" class="stat-trend">—</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎬</div>
+                        <div class="stat-value" id="reels-total">0</div>
+                        <div class="stat-label">Jami Reels</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👀</div>
+                        <div class="stat-value" id="reels-views">0</div>
+                        <div class="stat-label">O'rtacha Ko'rishlar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">❤️</div>
+                        <div class="stat-value" id="reels-likes">0</div>
+                        <div class="stat-label">O'rtacha Like</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💬</div>
+                        <div class="stat-value" id="reels-comments">0</div>
+                        <div class="stat-label">O'rtacha Comment</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Details -->
+            <div class="card">
+                <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">📈 Batafsil Tahlil</h4>
+                <div class="details-list" id="details-list"></div>
+            </div>
+
+            <!-- Trend Chart -->
+            <div class="card">
+                <div class="chart-container">
+                    <div class="chart-header">📉 Oxirgi Postlar Trendi</div>
+                    <canvas id="trendChart" height="200"></canvas>
+                </div>
             </div>
         </div>
 
         <div id="start-placeholder" class="empty-state">
-            <i class="fab fa-search"></i>
-            <p>Tahlil qilish uchun<br>username kiriting</p>
+            <i class="fas fa-chart-line"></i>
+            <p>Professional Instagram analitika<br>Har qanday akkauntni chuqur tahlil qiling</p>
         </div>
     </div>
 
     <div id="page-history" class="page hidden">
-        <h2 style="font-size: 20px; margin-bottom: 20px; padding-left: 10px;">Tahlillar Tarixi</h2>
-        <div class="card" id="history-list" style="padding: 0;">
-            <p style="text-align: center; color: var(--text-gray); padding: 20px; font-size: 13px;">Tarix bo'm-bo'sh</p>
+        <h2 style="font-size: 22px; margin-bottom: 20px; font-weight: 700;">📚 Tahlillar Tarixi</h2>
+        <div class="card" id="history-list">
+            <p style="text-align: center; color: var(--text-gray); font-size: 13px;">Hali hech narsa qidirilmadi</p>
         </div>
     </div>
 
     <div id="page-profile" class="page hidden">
-        <div class="card" style="text-align: center; padding: 30px;">
-            <div style="width: 80px; height: 80px; background: var(--bg-body); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 30px; color: var(--text-gray); border: 2px solid var(--border-color);">
-                <i class="fas fa-user-astronaut"></i>
+        <div class="card" style="text-align: center; padding: 40px 30px;">
+            <div style="width: 90px; height: 90px; background: linear-gradient(135deg, var(--primary), var(--purple)); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 36px; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);">
+                <i class="fas fa-user"></i>
             </div>
-            <h3>Foydalanuvchi</h3>
-            <p style="color: var(--text-gray); font-size: 13px; margin-top: 5px;">InstaAudit Lite Versiyasi</p>
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Foydalanuvchi</h3>
+            <p style="color: var(--text-gray); font-size: 13px;">Pro versiya faol</p>
         </div>
         
-        <div class="card" style="padding: 0;">
-            <div class="theme-switch-wrapper">
-                <span style="font-weight: 600; display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-moon" style="color: var(--primary);"></i> Tun rejimi
-                </span>
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox">
-                    <span class="slider round"></span>
-                </label>
+        <div class="card">
+            <div class="details-list">
+                <div class="detail-item">
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                    <div>
+                        <strong>Status:</strong> Faol<br>
+                        <span style="font-size: 12px; color: var(--text-gray);">Barcha funksiyalar ochiq</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-chart-bar" style="color: var(--primary);"></i>
+                    <div>
+                        <strong>Jami tahlillar:</strong> <span id="total-checks">0</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-crown" style="color: var(--warning);"></i>
+                    <div>
+                        <strong>Versiya:</strong> Pro 3.0<br>
+                        <span style="font-size: 12px; color: var(--text-gray);">Reels analytics, Period filters</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <div class="bottom-nav">
     <div class="nav-item active" onclick="nav('analysis', this)"><i class="fas fa-home"></i></div>
     <div class="nav-item" onclick="nav('history', this)"><i class="fas fa-history"></i></div>
-    <div class="nav-item" onclick="nav('profile', this)"><i class="fas fa-cog"></i></div>
+    <div class="nav-item" onclick="nav('profile', this)"><i class="fas fa-user-cog"></i></div>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
+    tg.setHeaderColor('#0A0E27');
     
-    // Render Server Manzili
     const API_URL = "https://insta-6zrw.onrender.com";
-
+    let currentPeriod = "weekly";
+    let currentData = null;
     let chartInstance = null;
+    let checkCount = 0;
 
-    // Navigatsiya
     function nav(pageId, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
         document.getElementById('page-' + pageId).classList.remove('hidden');
@@ -270,140 +611,217 @@
         el.classList.add('active');
     }
 
-    // Dark Mode Toggle
-    const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-    function switchTheme(e) {
-        if (e.target.checked) {
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            document.body.classList.remove('dark-mode');
-            localStorage.setItem('theme', 'light');
+    function changePeriod(period, el) {
+        currentPeriod = period;
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        
+        if(currentData) {
+            analyzeUser();
         }
     }
-    toggleSwitch.addEventListener('change', switchTheme, false);
-    // Saqlangan temani yuklash
-    if(localStorage.getItem('theme') === 'dark'){
-        document.body.classList.add('dark-mode');
-        toggleSwitch.checked = true;
+
+    function formatNumber(num) {
+        if(num >= 1000000) return (num/1000000).toFixed(1) + 'M';
+        if(num >= 1000) return (num/1000).toFixed(1) + 'K';
+        return num.toString();
     }
 
-    // Tahlilni boshlash (Inputdan yoki Tarixdan)
-    function startAnalysis(usernameFromHistory = null) {
-        let username = usernameFromHistory;
-        if (!username) {
-            username = document.getElementById('usernameInput').value.trim();
-        } else {
-            document.getElementById('usernameInput').value = username;
-            nav('analysis', document.querySelector('.bottom-nav .nav-item:first-child'));
+    function getTrendIcon(trend) {
+        if(trend === 'growing') return '<i class="fas fa-arrow-up trend-up"></i> O\'sish';
+        if(trend === 'declining') return '<i class="fas fa-arrow-down trend-down"></i> Pasayish';
+        return '<i class="fas fa-minus trend-stable"></i> Barqaror';
+    }
+
+    async function analyzeUser() {
+        const username = document.getElementById('usernameInput').value.trim().replace('@', '');
+        if(!username) {
+            tg.showAlert("Iltimos, username kiriting!");
+            return;
         }
 
-        if(!username) { tg.showAlert("Iltimos, username kiriting!"); return; }
-
-        // UI Reset
         document.getElementById('start-placeholder').classList.add('hidden');
         document.getElementById('result-area').classList.add('hidden');
+        document.getElementById('filter-section').classList.add('hidden');
         document.getElementById('loader').classList.remove('hidden');
 
-        fetchData(username);
-    }
-
-    async function fetchData(username) {
         try {
-            const response = await fetch(`${API_URL}/analyze/${username}`);
-            if (!response.ok) throw new Error("Server bilan bog'lanishda xatolik");
+            const response = await fetch(`${API_URL}/analyze/${username}?period=${currentPeriod}`);
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || "Server xatosi");
+            }
+
             const data = await response.json();
+            
+            if(data.error === 'private_account') {
+                tg.showAlert("⚠️ Bu akkaunt yopiq (private). Faqat ochiq akkauntlarni tahlil qilish mumkin.");
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('start-placeholder').classList.remove('hidden');
+                return;
+            }
+
+            currentData = data;
             renderData(data);
             saveToHistory(data);
+            checkCount++;
+            document.getElementById('total-checks').innerText = checkCount;
+
             document.getElementById('loader').classList.add('hidden');
+            document.getElementById('filter-section').classList.remove('hidden');
             document.getElementById('result-area').classList.remove('hidden');
+
+            tg.HapticFeedback.notificationOccurred('success');
+
         } catch (error) {
-            alert("Xatolik: " + error.message);
+            console.error(error);
+            tg.showAlert("❌ Xatolik: " + error.message);
             document.getElementById('loader').classList.add('hidden');
             document.getElementById('start-placeholder').classList.remove('hidden');
+            tg.HapticFeedback.notificationOccurred('error');
         }
     }
 
     function renderData(data) {
+        // Profile
         document.getElementById('ui-username').innerText = "@" + data.username;
-        document.getElementById('ui-followers').innerText = parseInt(data.followers).toLocaleString();
-        // Rasm yuklanmasa, zaxira rasmga o'tadi (HTML dagi onerror ishlaydi)
-        document.getElementById('ui-avatar').src = data.avatar_url;
+        document.getElementById('ui-fullname').innerText = data.full_name || data.username;
+        document.getElementById('ui-followers').innerText = formatNumber(data.followers);
+        document.getElementById('ui-media').innerText = formatNumber(data.media_count);
+        document.getElementById('ui-avatar').src = data.avatar_url || "https://via.placeholder.com/150";
         
-        document.getElementById('ui-er').innerText = "~" + data.er + "%";
-        document.getElementById('ui-likes').innerText = "~" + parseInt(data.avg_likes).toLocaleString();
-        document.getElementById('ui-media').innerText = data.media_count.toLocaleString();
-        document.getElementById('ui-fake').innerText = "~" + data.fake_score + "%";
+        if(data.is_verified) {
+            document.getElementById('verified-icon').classList.remove('hidden');
+        } else {
+            document.getElementById('verified-icon').classList.add('hidden');
+        }
 
-        // Score Logic
-        const score = data.ad_score;
-        const circle = document.getElementById('ui-score-circle');
-        const verdict = document.getElementById('ui-verdict');
-        document.getElementById('ui-score').innerText = score;
+        // Analytics
+        const analytics = data.analytics;
+        document.getElementById('ui-er').innerText = analytics.er + "%";
+        document.getElementById('ui-likes').innerText = formatNumber(analytics.avg_likes);
+        document.getElementById('ui-comments').innerText = formatNumber(analytics.avg_comments);
+        document.getElementById('ui-views').innerText = formatNumber(analytics.avg_views);
 
-        let color = "var(--danger)"; let text = "ZAIF"; let bg = "#FEF2F2";
-        if(score >= 75) { color = "var(--success)"; text = "KUCHLI"; bg = "#ECFDF5"; }
-        else if(score >= 45) { color = "var(--warning)"; text = "O'RTACHA"; bg = "#FFFBEB"; }
+        // Reels
+        const reels = data.reels;
+        document.getElementById('reels-total').innerText = reels.total;
+        document.getElementById('reels-views').innerText = formatNumber(reels.avg_views);
+        document.getElementById('reels-likes').innerText = formatNumber(reels.avg_likes);
+        document.getElementById('reels-comments').innerText = formatNumber(reels.avg_comments);
+        document.getElementById('reels-trend').innerHTML = getTrendIcon(reels.trend);
 
-        circle.style.borderColor = color;
-        circle.style.color = color;
-        verdict.style.backgroundColor = bg;
-        verdict.style.color = color;
-        verdict.innerText = text;
+        // Quality Score
+        const quality = data.quality;
+        document.getElementById('ui-quality-score').innerText = quality.score;
+        document.getElementById('ui-quality-grade').innerText = quality.grade;
+        document.getElementById('ui-quality-verdict').innerText = quality.verdict;
+        document.getElementById('ui-quality-rec').innerText = quality.recommendation;
 
-        // Chart
+        // Color coding
+        let color, bg;
+        if(quality.score >= 85) {
+            color = '#10B981'; bg = 'rgba(16, 185, 129, 0.15)';
+        } else if(quality.score >= 70) {
+            color = '#3B82F6'; bg = 'rgba(59, 130, 246, 0.15)';
+        } else if(quality.score >= 50) {
+            color = '#F59E0B'; bg = 'rgba(245, 158, 11, 0.15)';
+        } else {
+            color = '#EF4444'; bg = 'rgba(239, 68, 68, 0.15)';
+        }
+
+        const circle = document.getElementById('ui-quality-circle');
+        circle.style.border = `6px solid ${color}`;
+        document.getElementById('ui-quality-verdict').style.background = bg;
+        document.getElementById('ui-quality-verdict').style.color = color;
+
+        // Details List
+        // Details List (Batafsil tahlil ro'yxati)
+        const detailsContainer = document.getElementById('details-list');
+        detailsContainer.innerHTML = '';
+        
+        if (data.details && data.details.length > 0) {
+            data.details.forEach(item => {
+                const icon = item.is_good ? 'fa-check-circle' : (item.is_warning ? 'fa-exclamation-triangle' : 'fa-times-circle');
+                const color = item.is_good ? 'var(--success)' : (item.is_warning ? 'var(--warning)' : 'var(--danger)');
+                
+                const html = `
+                <div class="detail-item">
+                    <i class="fas ${icon}" style="color: ${color};"></i>
+                    <div>${item.text}</div>
+                </div>`;
+                detailsContainer.insertAdjacentHTML('beforeend', html);
+            });
+        } else {
+            detailsContainer.innerHTML = '<div style="text-align:center; color:var(--text-gray); font-size:12px;">Qo\'shimcha ma\'lumot yo\'q</div>';
+        }
+
+        // Chart (Grafik)
         const ctx = document.getElementById('trendChart').getContext('2d');
         if(chartInstance) chartInstance.destroy();
         
-        // Chart rangini temaga moslash
-        const isDark = document.body.classList.contains('dark-mode');
-        const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)';
+        // Grafik rangi (Sifatiga qarab)
+        let chartColor = quality.score >= 70 ? '#10B981' : (quality.score >= 50 ? '#F59E0B' : '#EF4444');
 
         chartInstance = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], // Oxirgi 10 ta post
                 datasets: [{
-                    label: 'Simulyatsiya',
-                    data: data.history_posts,
-                    borderColor: color,
-                    backgroundColor: color.replace(')', ', 0.1)').replace('var(', 'rgba('),
-                    borderWidth: 2,
-                    tension: 0.4,
+                    label: 'Likes Trend',
+                    data: data.history || [0,0,0,0,0,0,0,0,0,0], // Agar tarix bo'lmasa 0
+                    borderColor: chartColor,
+                    backgroundColor: (context) => {
+                        const ctx = context.chart.ctx;
+                        const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+                        gradient.addColorStop(0, chartColor + '40'); // 40 = shaffoflik
+                        gradient.addColorStop(1, chartColor + '00');
+                        return gradient;
+                    },
+                    borderWidth: 3,
+                    tension: 0.4, // Egri chiziq yumshoqligi
                     fill: true,
-                    pointRadius: 0
+                    pointRadius: 0,
+                    pointHoverRadius: 6
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: { 
                     x: { display: false }, 
-                    y: { display: true, grid: { color: gridColor }, ticks: { display: false } } 
-                }
+                    y: { display: false } 
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
             }
         });
     }
 
     function saveToHistory(data) {
         const container = document.getElementById('history-list');
-        if(container.innerText.includes("Tarix bo'm-bo'sh")) container.innerHTML = "";
+        if(container.innerText.includes("Hali hech narsa")) container.innerHTML = "";
         
-        // Eski bir xilusernameni o'chirish
-        const existing = document.getElementById(`hist-${data.username}`);
-        if(existing) existing.remove();
+        // Hozirgi vaqt
+        const time = new Date().toLocaleTimeString('uz-UZ', {hour: '2-digit', minute:'2-digit'});
 
-        // Yangi element qo'shish (onclick bilan)
         const html = `
-            <div class="history-item" id="hist-${data.username}" onclick="startAnalysis('${data.username}')">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <img src="${data.avatar_url}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/847/847969.png'">
+            <div class="card" style="padding: 12px; margin-bottom: 10px; display:flex; justify-content:space-between; align-items:center;" onclick="document.getElementById('usernameInput').value='${data.username}'; analyzeUser(); nav('analysis', document.querySelector('.nav-item.active'))">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="${data.avatar_url}" style="width:40px; height:40px; border-radius:50%;">
                     <div>
-                        <div style="font-weight:600">@${data.username}</div>
-                        <div style="font-size:12px; color:var(--text-gray);">${data.followers.toLocaleString()} followers</div>
+                        <div style="font-weight:700; font-size:14px;">@${data.username}</div>
+                        <div style="font-size:11px; color:var(--text-gray);">${time} • ${formatNumber(data.followers)} followers</div>
                     </div>
                 </div>
-                <div style="font-weight:700; color:var(--primary); font-size:18px;">${data.ad_score}</div>
+                <div style="text-align:right;">
+                    <div style="font-weight:800; color:${data.quality.score >= 70 ? 'var(--success)' : 'var(--warning)'}">${data.quality.score}</div>
+                    <div style="font-size:10px; color:var(--text-gray);">Score</div>
+                </div>
             </div>
         `;
         container.insertAdjacentHTML('afterbegin', html);
